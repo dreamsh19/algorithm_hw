@@ -25,7 +25,7 @@ class Solution3 {
 	static int n;
 	static String s;
 	static int Answer;
-
+	static int[][] LCS;
 	public static void main(String[] args) throws Exception {
 		/*
 		   동일 폴더 내의 input3.txt 로부터 데이터를 읽어옵니다.
@@ -49,7 +49,25 @@ class Solution3 {
 			n = Integer.parseInt(stk.nextToken());
 			s = br.readLine();
 
-			Answer = 0;
+			LCS=new int[n][n];
+			for(int i=0;i<n;i++){
+				LCS[i][i]=1;
+			}
+			for (int i=1;i<n;i++){
+				for(int j=0;j+i<n;j++){
+					if(s.charAt(j)==s.charAt(j+i)){
+						LCS[j][j+i]=LCS[j+1][j+i-1]+2;
+					}else{
+						LCS[j][j+i]=Math.max(LCS[j][j+i-1],LCS[j+1][j+i]);
+					}
+				}
+			}
+
+
+
+
+			Answer=LCS[0][n-1];
+
 
 
 
