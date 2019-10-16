@@ -83,8 +83,11 @@ class Solution4 {
                     A[i][j] = Integer.parseInt(stk.nextToken());
                 }
             }
+            for (int type=0;type<6;type++){
+                storeMax[0][type]=getColSum(0,type);
+            }
 
-            for (int j = 0; j < n; j++) {
+            for (int j = 1; j < n; j++) {
                 updateMaxSum(j);
             }
 
