@@ -73,48 +73,52 @@ class Solution1 {
     }
 
     static void mergeSort1(int[] A, int start, int end) {
+        // let S(n) : times takes for mergeSort1 to sort n elements
+        // Then, S(n) = 2 * S(n/2) + Θ(n)
+        // S(n) = Θ(nlogn)
 
         if (start < end) {
-
             int mid = (start + end) / 2;
 
-            mergeSort1(A, start, mid);
-            mergeSort1(A, mid + 1, end);
+            mergeSort1(A, start, mid);  // It takes S(n/2)
+            mergeSort1(A, mid + 1, end); // It takes S(n/2)
 
             int[] left = new int[mid - start + 1];
             int[] right = new int[end - mid];
-            for (int i = 0; i < left.length; i++) {
+            for (int i = 0; i < left.length; i++) { // It takes n/2 time
                 left[i] = A[start + i];
             }
-            for (int i = 0; i < right.length; i++) {
+            for (int i = 0; i < right.length; i++) { // It takes n/2 time
                 right[i] = A[mid + i + 1];
             }
 
             int left_idx = 0;
             int right_idx = 0;
             int A_idx = start;
-            while (left_idx < left.length && right_idx < right.length) {
+            while (left_idx < left.length && right_idx < right.length) { // 1. It iterates (n-1) times in worst case = O(n)
                 if (left[left_idx] < right[right_idx]) {
-
                     A[A_idx++] = left[left_idx++];
                 } else {
-
                     A[A_idx++] = right[right_idx++];
                 }
             }
-            while (right_idx < right.length) {
-
+            while (right_idx < right.length) {  // 2. It iterates n/2 times in worst case = O(n)
                 A[A_idx++] = right[right_idx++];
-
             }
-            while (left_idx < left.length) {
+            while (left_idx < left.length) { // 3. It iterates n/2 times in worst case = O(n)
                 A[A_idx++] = left[left_idx++];
-
             }
+            // But 1,2,3 does not occur at the same time. Thus, 1,2,3 total takes O(n).
+            // Thus total overhead of mergeSort1 is 2 * n/2 + O(n) = Θ(n)
         }
     }
 
     static void mergeSort2(int[] A, int start, int end) {
+
+        // let S(n) : times takes for mergeSort2 to sort n elements
+        // Then, S(n) = 16 * S(n/16) + Θ(n)
+        // S(n) = Θ(nlogn)
+
         if (start < end) {
             int blockLength = Math.max((end - start) / 16, 1);
 
@@ -126,17 +130,17 @@ class Solution1 {
                 if (blockStart > end) {
                     break;
                 }
-                mergeSort2(A, blockStart, blockStart + blockLength - 1);
-                blocks[block] = new int[blockLength];
-                for (int i = 0; i < blockLength; i++) {
+                mergeSort2(A, blockStart, blockStart + blockLength - 1); // It takes S(n/16)
+                blocks[block] = new int[blockLength]; // It takes n/16 time
+                for (int i = 0; i < blockLength; i++) { // It iterates n/16 time
                     blocks[block][i] = A[blockStart + i];
                 }
                 blockStart += blockLength;
             }
 
-            mergeSort2(A, blockStart, end);
-            blocks[15] = new int[end - blockStart + 1];
-            for (int i = 0; i < blocks[15].length; i++) {
+            mergeSort2(A, blockStart, end); // It takes S(n/16)
+            blocks[15] = new int[end - blockStart + 1]; // It takes n/16 time
+            for (int i = 0; i < blocks[15].length; i++) { // It iterates n/16 time
                 blocks[15][i] = A[blockStart + i];
             }
 
@@ -145,16 +149,17 @@ class Solution1 {
             int A_idx = start;
 
             HashSet<Integer> blockNums = new HashSet<>();
-            for (int i = 0; i < 16; i++) {
+            for (int i = 0; i < 16; i++) { // It iterates 16 times
+                // Inside for loop it takes constant time
                 if (blocks[i] != null && block_idxs[i] < blocks[i].length) {
                     blockNums.add(i);
                 }
             }
-            while (!blockNums.isEmpty()) {
+            while (!blockNums.isEmpty()) { // It iterates n times
                 int min = Integer.MAX_VALUE;
                 int min_block = -1;
 
-                for (int blockNum : blockNums) {
+                for (int blockNum : blockNums) { // It iterates 16 times in worst case
                     int block_idx = block_idxs[blockNum];
                     int block_value = blocks[blockNum][block_idx];
                     if (block_value < min) {
@@ -169,6 +174,8 @@ class Solution1 {
                 }
 
             }
+            // Total overhead of mergeSort2 = (n/16) * 2 + 16 * n = Θ(n)
+
 
         }
 
@@ -176,6 +183,10 @@ class Solution1 {
     }
 
     static void mergeSort3(int[] A, int start, int end) {
+        // let S(n) : times takes for mergeSort3 to sort n elements
+        // Then, S(n) = 16 * S(n/16) + Θ(n)
+        // S(n) = Θ(nlogn)
+
         if (start < end) {
             int blockLength = Math.max((end - start) / 16, 1);
 
@@ -187,17 +198,17 @@ class Solution1 {
                 if (blockStart > end) {
                     break;
                 }
-                mergeSort3(A, blockStart, blockStart + blockLength - 1);
-                blocks[block] = new int[blockLength];
-                for (int i = 0; i < blockLength; i++) {
+                mergeSort3(A, blockStart, blockStart + blockLength - 1); // It takes S(n/16)
+                blocks[block] = new int[blockLength]; // It takes n/16 times
+                for (int i = 0; i < blockLength; i++) { // It iterates n/16 times
                     blocks[block][i] = A[blockStart + i];
                 }
                 blockStart += blockLength;
             }
 
-            mergeSort3(A, blockStart, end);
-            blocks[15] = new int[end - blockStart + 1];
-            for (int i = 0; i < blocks[15].length; i++) {
+            mergeSort3(A, blockStart, end); // It takes S(n/16)
+            blocks[15] = new int[end - blockStart + 1]; // It takes n/16 times
+            for (int i = 0; i < blocks[15].length; i++) { // It iterates n/16 times
                 blocks[15][i] = A[blockStart + i];
             }
 
@@ -212,28 +223,30 @@ class Solution1 {
                     heapNode toAdd = new heapNode(blocks[blockNum][0], blockNum);
                     minHeap.add(toAdd);
                 }
+                // It takes log2(2)+log2(3)+...log2(16) in worst case which is constant time
             }
 
 
-            while(!minHeap.isEmpty()){
-                heapNode polled=minHeap.poll();
+            while(!minHeap.isEmpty()){ // loop 1
+                heapNode polled=minHeap.poll(); // It takes log2(16) time in worst case
                 A[A_idx++]=polled.value;
                 int blockNum=polled.blockNum;
                 block_idxs[blockNum]++;
-                while(block_idxs[blockNum]==blocks[blockNum].length){
+                while(block_idxs[blockNum]==blocks[blockNum].length){ // loop 2
                     if(minHeap.isEmpty()) return;
-                    polled=minHeap.poll();
+                    polled=minHeap.poll(); // It takes log2(16) time in worst case
                     A[A_idx++]=polled.value;
                     blockNum=polled.blockNum;
                     block_idxs[blockNum]++;
                 }
                 int block_idx=block_idxs[blockNum];
-                minHeap.add(new heapNode(blocks[blockNum][block_idx],blockNum));
-
+                minHeap.add(new heapNode(blocks[blockNum][block_idx],blockNum)); // It takes log2(16) time in worst case
 
             }
-
-
+            // The sum of total iteration of loop 1 and loop 2 is n.
+            // And poll and add takes log2(16) in worstCase
+            // Thus it takes 2 * log2(16) * n = 8n
+            // Therefore, total overhead of mergeSort2 = (n/16) * 2 + 8 * n = Θ(n)
 
 
         }
