@@ -36,12 +36,16 @@ class Solution2 {
 	static long[][] c_num;
 
 
-	static void cal(){
-		a_num=new long[n][n];
-		b_num=new long[n][n];
-		c_num=new long[n][n];
+	static void cal(){ // cal takes Θ(n^3)
+
+		a_num=new long[n][n]; // It takes n * n times = Θ(n^2)
+		b_num=new long[n][n]; // It takes n * n times = Θ(n^2)
+		c_num=new long[n][n]; // It takes n * n times = Θ(n^2)
 
 		for(int i=0;i<n;i++){
+			// It iterates n times
+			// Inside for loop it takes Θ(1) time
+			// Thus it takes n * Θ(1) = Θ(n)
 			switch (s.charAt(i)){
 				case 'a' : a_num[i][i]=1;break;
 				case 'b' : b_num[i][i]=1;break;
@@ -50,10 +54,12 @@ class Solution2 {
 			}
 		}
 
-		for(int len=1;len<n;len++){
-			for(int start=0;start< n-len;start++){
+		for(int len=1;len<n;len++){ // 'len' iterates (n-1) times
+			for(int start=0;start< n-len;start++){ // 'start' iterates (n-len) times
 				int end=start+len;
-				for (int mid=start;mid<end;mid++){
+				for (int mid=start;mid<end;mid++){ // 'mid' iterates 'len' times
+					// Inside for loop it takes Θ(1) time
+					// Thus it takes (n-1) * 1 + (n-2) * 2 + (n-3) * 3 + ... + 1 * (n-1) = Θ(n^3)
 					a_num[start][end]+=(
 							(a_num[start][mid]+b_num[start][mid])*c_num[mid+1][end]
 							+c_num[start][mid]*a_num[mid+1][end]
@@ -70,6 +76,8 @@ class Solution2 {
 				}
 			}
 		}
+		// Therefore, overall complexity = 3 * Θ(n^2) + Θ(n) + Θ(n^3) = Θ(n^3)
+
 
 	}
 	public static void main(String[] args) throws Exception {
@@ -94,7 +102,7 @@ class Solution2 {
 			n = Integer.parseInt(stk.nextToken());
 			s = br.readLine();
 
-			cal();
+			cal(); // cal takes Θ(n^3)
 			/////////////////////////////////////////////////////////////////////////////////////////////
 			/*
 			   이 부분에서 여러분의 알고리즘이 수행됩니다.
