@@ -49,12 +49,16 @@ class Solution3 {
 			n = Integer.parseInt(stk.nextToken());
 			s = br.readLine();
 
-			LCS=new int[n][n];
-			for(int i=0;i<n;i++){
+			LCS=new int[n][n]; // It takes n * n times =  Θ(n^2)
+
+			for(int i=0;i<n;i++){ // It iterates n times = Θ(n)
 				LCS[i][i]=1;
 			}
-			for (int len=1;len<n;len++){
-				for(int start=0;start+len<n;start++){
+			for (int len=1;len<n;len++){  // 'len' iterates (n-1) times
+				for(int start=0;start+len<n;start++){ // 'start' iterates (n-len) times
+					// Inside for loop, it takes Θ(1) time
+					// Thus it takes (n-1)+(n-2) + ... + 1 = Θ(n^2)
+
 					if(s.charAt(start)==s.charAt(start+len)){
 						LCS[start][start+len]=LCS[start+1][start+len-1]+2;
 					}else{
@@ -62,16 +66,10 @@ class Solution3 {
 					}
 				}
 			}
-
-
-
-
 			Answer=LCS[0][n-1];
+			// Therefore, overall complexity = Θ(n^2) + Θ(n) + Θ(n^2) = Θ(n^2)
 
-
-
-
-
+			
 			/////////////////////////////////////////////////////////////////////////////////////////////
 			/*
 			   이 부분에서 여러분의 알고리즘이 수행됩니다.
