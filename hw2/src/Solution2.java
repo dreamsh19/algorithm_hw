@@ -31,6 +31,47 @@ class Solution2 {
     static String s;                        // 문자열
 	static long[] Answer = new long[3];     // 정답
 
+	static long[][] a;
+	static long[][] b;
+	static long[][] c;
+
+
+	static void cal(){
+		a=new long[n][n];
+		b=new long[n][n];
+		c=new long[n][n];
+
+		for(int i=0;i<n;i++){
+			switch (s.charAt(i)){
+				case 'a' : a[i][i]=1;break;
+				case 'b' : b[i][i]=1;break;
+				case 'c' : c[i][i]=1;break;
+				default : break;
+			}
+		}
+
+		for(int len=1;len<n;len++){
+			for(int start=0;start< n-len;start++){
+				int end=start+len;
+				for (int mid=start;mid<end;mid++){
+					a[start][end]+=(
+							(a[start][mid]+b[start][mid])*c[mid+1][end]
+							+c[start][mid]*a[mid+1][end]
+					);
+					b[start][end]+=(
+							a[start][mid]*(a[mid+1][end]+b[mid+1][end])
+							+b[start][mid]*b[mid+1][end]
+					);
+					c[start][end]+=(
+							b[start][mid]*a[mid+1][end]
+							+c[start][mid]*(b[mid+1][end]+c[mid+1][end])
+							);
+
+				}
+			}
+		}
+
+	}
 	public static void main(String[] args) throws Exception {
 		/*
 		   동일 폴더 내의 input2.txt 로부터 데이터를 읽어옵니다.
@@ -53,6 +94,7 @@ class Solution2 {
 			n = Integer.parseInt(stk.nextToken());
 			s = br.readLine();
 
+			cal();
 			/////////////////////////////////////////////////////////////////////////////////////////////
 			/*
 			   이 부분에서 여러분의 알고리즘이 수행됩니다.
@@ -60,9 +102,9 @@ class Solution2 {
 			   문제의 답을 계산하여 그 값을 Answer(long 타입!!)에 저장하는 것을 가정하였습니다.
 			 */
 			/////////////////////////////////////////////////////////////////////////////////////////////
-			Answer[0] = 0;  // a 의 갯수
-			Answer[1] = 0;  // b 의 갯수
-			Answer[2] = 0;  // c 의 갯수
+			Answer[0] = a[0][n-1];  // a 의 갯수
+			Answer[1] = b[0][n-1];  // b 의 갯수
+			Answer[2] = c[0][n-1];  // c 의 갯수
 
 
 			// output2.txt로 답안을 출력합니다.
