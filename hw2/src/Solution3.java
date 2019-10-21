@@ -53,12 +53,12 @@ class Solution3 {
 			for(int i=0;i<n;i++){
 				LCS[i][i]=1;
 			}
-			for (int i=1;i<n;i++){
-				for(int j=0;j+i<n;j++){
-					if(s.charAt(j)==s.charAt(j+i)){
-						LCS[j][j+i]=LCS[j+1][j+i-1]+2;
+			for (int len=1;len<n;len++){
+				for(int start=0;start+len<n;start++){
+					if(s.charAt(start)==s.charAt(start+len)){
+						LCS[start][start+len]=LCS[start+1][start+len-1]+2;
 					}else{
-						LCS[j][j+i]=Math.max(LCS[j][j+i-1],LCS[j+1][j+i]);
+						LCS[start][start+len]=Math.max(LCS[start][start+len-1],LCS[start+1][start+len]);
 					}
 				}
 			}

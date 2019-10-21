@@ -26,6 +26,27 @@ class Solution5 {
 	static int[] h = new int[max_n], d = new int[max_n-1];
 	static int Answer;
 
+
+	static long sol(int n,int total_H){
+		if(total_H<0) return 0;
+
+		if(n==0){
+			if ( h[n]<= total_H){
+				return 2;
+			}else{
+				return 1;
+			}
+		}
+
+		long ans=sol(n-1,total_H);
+		h[n-1]-=d[n-1];
+		ans+=sol(n-1,total_H-h[n]);
+		h[n-1]+=d[n-1];
+//		ans+=sol(n-1,total_H-h[n]+d[n-1]);
+
+		return ans;
+	}
+
 	public static void main(String[] args) throws Exception {
 		/*
 		   동일 폴더 내의 input5.txt 로부터 데이터를 읽어옵니다.
@@ -38,7 +59,7 @@ class Solution5 {
 		/*
 		   10개의 테스트 케이스가 주어지므로, 각각을 처리합니다.
 		 */
-		for (int test_case = 1; test_case <= 10; test_case++) {
+		for (int test_case = 1; test_case <= 1; test_case++) {
 			/*
 			   각 테스트 케이스를 표준 입력에서 읽어옵니다.
 			   먼저 블록의 개수와 최대 높이를 각각 n, H에 읽어들입니다.
@@ -56,14 +77,15 @@ class Solution5 {
 				d[i] = Integer.parseInt(stk.nextToken());
 			}
 
-
-			/////////////////////////////////////////////////////////////////////////////////////////////
+			long ans=sol(n-1,H)-1;
+			System.out.println(ans);
+			Answer=(int)(ans%1000000);
+				/////////////////////////////////////////////////////////////////////////////////////////////
 			/*
 			   이 부분에서 여러분의 알고리즘이 수행됩니다.
 			   문제의 답을 계산하여 그 값을 Answer에 저장하는 것을 가정하였습니다.
 			 */
 			/////////////////////////////////////////////////////////////////////////////////////////////
-			Answer = 0;
 
 
 			// output5.txt로 답안을 출력합니다.
