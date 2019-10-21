@@ -35,21 +35,21 @@ class Solution4 {
     };
     static int[][] storeMax=new int[max_n][6];
 
-    static int getColSum(int colIndex, int type) {
+    static int getColSum(int colIndex, int type) { // complexity of getColSum : Θ(1)
         if (type < 0 || type > 5) {
             System.out.println("Wrong type");
             System.exit(1);
         }
         int colSum = 0;
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 3; i++) {  // 3 * Θ(1)
             colSum += A[i][colIndex] * coeff[type][i];
         }
         return colSum;
 
     }
 
-    static void updateMaxSum(int colIndex) {
-        for (int type = 0; type < 6; type++) {
+    static void updateMaxSum(int colIndex) {  // complexity of updateMaxSum : Θ(1)
+        for (int type = 0; type < 6; type++) { // 6 * Θ(1)
             storeMax[colIndex][type] = Math.max(storeMax[colIndex-1][(type + 2) % 6], storeMax[colIndex-1][(type + 4) % 6])
                     + getColSum(colIndex, type);
         }
@@ -83,18 +83,19 @@ class Solution4 {
                     A[i][j] = Integer.parseInt(stk.nextToken());
                 }
             }
-            for (int type=0;type<6;type++){
+            for (int type=0;type<6;type++){  // 6 * Θ(1)  ( getColSum takes Θ(1) time )
                 storeMax[0][type]=getColSum(0,type);
             }
 
-            for (int j = 1; j < n; j++) {
+            for (int j = 1; j < n; j++) {   // (n-1) * Θ(1) (updateMaxSum takes Θ(1) time )
                 updateMaxSum(j);
             }
 
             Answer=Integer.MIN_VALUE;
-            for (int type=0;type<6;type++){
+            for (int type=0;type<6;type++){ // 6 * Θ(1)
             	Answer=Math.max(Answer,storeMax[n-1][type]);
 			}
+            // Therefore, overall complexity = 6 * Θ(1) + (n-1) * Θ(1) + 6 * Θ(1) = Θ(n)
 
 
             /////////////////////////////////////////////////////////////////////////////////////////////

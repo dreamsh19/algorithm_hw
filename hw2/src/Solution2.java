@@ -31,21 +31,21 @@ class Solution2 {
     static String s;                        // 문자열
 	static long[] Answer = new long[3];     // 정답
 
-	static long[][] a;
-	static long[][] b;
-	static long[][] c;
+	static long[][] a_num;
+	static long[][] b_num;
+	static long[][] c_num;
 
 
 	static void cal(){
-		a=new long[n][n];
-		b=new long[n][n];
-		c=new long[n][n];
+		a_num=new long[n][n];
+		b_num=new long[n][n];
+		c_num=new long[n][n];
 
 		for(int i=0;i<n;i++){
 			switch (s.charAt(i)){
-				case 'a' : a[i][i]=1;break;
-				case 'b' : b[i][i]=1;break;
-				case 'c' : c[i][i]=1;break;
+				case 'a' : a_num[i][i]=1;break;
+				case 'b' : b_num[i][i]=1;break;
+				case 'c' : c_num[i][i]=1;break;
 				default : break;
 			}
 		}
@@ -54,17 +54,17 @@ class Solution2 {
 			for(int start=0;start< n-len;start++){
 				int end=start+len;
 				for (int mid=start;mid<end;mid++){
-					a[start][end]+=(
-							(a[start][mid]+b[start][mid])*c[mid+1][end]
-							+c[start][mid]*a[mid+1][end]
+					a_num[start][end]+=(
+							(a_num[start][mid]+b_num[start][mid])*c_num[mid+1][end]
+							+c_num[start][mid]*a_num[mid+1][end]
 					);
-					b[start][end]+=(
-							a[start][mid]*(a[mid+1][end]+b[mid+1][end])
-							+b[start][mid]*b[mid+1][end]
+					b_num[start][end]+=(
+							a_num[start][mid]*(a_num[mid+1][end]+b_num[mid+1][end])
+							+b_num[start][mid]*b_num[mid+1][end]
 					);
-					c[start][end]+=(
-							b[start][mid]*a[mid+1][end]
-							+c[start][mid]*(b[mid+1][end]+c[mid+1][end])
+					c_num[start][end]+=(
+							b_num[start][mid]*a_num[mid+1][end]
+							+c_num[start][mid]*(b_num[mid+1][end]+c_num[mid+1][end])
 							);
 
 				}
@@ -102,9 +102,9 @@ class Solution2 {
 			   문제의 답을 계산하여 그 값을 Answer(long 타입!!)에 저장하는 것을 가정하였습니다.
 			 */
 			/////////////////////////////////////////////////////////////////////////////////////////////
-			Answer[0] = a[0][n-1];  // a 의 갯수
-			Answer[1] = b[0][n-1];  // b 의 갯수
-			Answer[2] = c[0][n-1];  // c 의 갯수
+			Answer[0] = a_num[0][n-1];  // a 의 갯수
+			Answer[1] = b_num[0][n-1];  // b 의 갯수
+			Answer[2] = c_num[0][n-1];  // c 의 갯수
 
 
 			// output2.txt로 답안을 출력합니다.
