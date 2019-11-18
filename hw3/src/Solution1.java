@@ -23,14 +23,139 @@ class Solution1 {
     static final int MAX_N = 1000;
 	static final int MAX_E = 100000;
 	static final int Div = 100000000;  // 1억
+	static final int Q_CAPACITY = 1<<10;
 	static int N, E;
 	static int[] U = new int[MAX_E], V = new int[MAX_E], W = new int[MAX_E];
 	static int[] Answer1 = new int[MAX_N+1];
 	static int[] Answer2 = new int[MAX_N+1];
     static double start1, start2;
     static double time1, time2;
+	static Node[][] adjList = new Node[MAX_N+1][MAX_N];
+	static int[] index = new int[MAX_N+1];
+    static int[] q=new int[Q_CAPACITY];
+	static class Queue{
+    	int head, tail;
+    	int capacity;
+    	int[] q;
+    	Queue(int capacity){
+    		this.head=this.tail=0;
+    		this.capacity=capacity;
+    		this.q=new int[capacity];
+		}
+		boolean isEmpty(){
+    		return head==tail;
+		}
+		boolean contains(int e){
+    		if(head==tail) return false;
+    		if(head<tail){
+    			for(int i=head;i<tail;i++){
+    				if(q[i]==e){
+    					return true;
+					}
+				}
+    			return false;
+			}else{
+    			for(int i=head;i<Q_CAPACITY;i++){
+    				if(q[i]==e){
+    					return true;
+					}
+				}
+    			for(int i=0;i<tail;i++){
+    				if(q[i]==e){
+    					return true;
+					}
+				}
+    			return false;
+			}
 
 
+		}
+		void enqueue(int e){
+			q[tail]=e;
+    		tail= (tail+1)%capacity;
+    	}
+    	int dequeue(){
+    		int temp=q[head];
+    		head= (head+1)%capacity;
+    		return temp;
+		}
+
+	}
+
+	static class Node{
+    	int vertex;
+    	int weight;
+
+    	Node(int vertex,int weight){
+    		this.vertex=vertex;
+    		this.weight=weight;
+		}
+
+	}
+	static void BellmanFord1(int start){
+		for(int i=1;i<=N;i++){
+			Answer1[i]=Div;
+		}
+		Answer1[start]=0;
+		for(int i=1;i<N;i++){
+			for(int e=0;e<E;e++){
+
+				int from = U[e];
+				int to = V[e];
+				int weight = W[e];
+//				if(Answer1[from]!=Integer.MAX_VALUE){
+//					Answer1[to]=Math.min(Answer1[to],Answer1[from]+weight);
+//				}
+//				if(Answer1[from]!=Integer.MAX_VALUE){
+					Answer1[to]=Math.min(Answer1[to],Answer1[from]+weight);
+//				}
+			}
+		}
+		for(int i=1;i<=N;i++){
+			Answer1[i]%=Div;
+		}
+	}
+
+	static void BellmanFord2(int start){
+
+		for(int i=1;i<=N;i++){
+			Answer2[i]=Div;
+			index[i]=0;
+		}
+		Answer2[start]=0;
+
+		for(int e=0;e<E;e++){
+			int from = U[e];
+			int to=V[e];
+			int weight=W[e];
+			adjList[from][index[from]++]=new Node(to,weight);
+		}
+
+
+		Queue q=new Queue(Q_CAPACITY);
+		q.enqueue(start);
+		while(!q.isEmpty()){
+//			System.out.printf("head[%d] tail[%d]\n",q.head,q.tail);
+			int from = q.dequeue();
+			Node[] temp = adjList[from];
+			int size=index[from];
+			for(int i=0;i<size;i++){
+				int to = temp[i].vertex;
+				int weight = temp[i].weight;
+				if(Answer2[from]+weight<Answer2[to]){
+					Answer2[to]=Answer2[from]+weight;
+					if(!q.contains(to)){
+						q.enqueue(to);
+					}
+				}
+			}
+		}
+		for(int v=1;v<=N;v++){
+			Answer2[v]%=Div;
+		}
+
+
+	}
 	public static void main(String[] args) throws Exception {
 		/*
 		   동일 폴더 내의 input1.txt 로부터 데이터를 읽어옵니다.
@@ -58,15 +183,15 @@ class Solution1 {
 				V[i] = Integer.parseInt(stk.nextToken());
 				W[i] = Integer.parseInt(stk.nextToken());
 			}
-
+//			System.out.printf("TESTCASE[%d] N[%d] E[%d]\n",test_case,N,E);
             /* Problem 1-1 */
             start1 = System.currentTimeMillis();
-            // Answer1 = BellmanFord1(1);
+            BellmanFord1(1);
             time1 = (System.currentTimeMillis() - start1);
 
             /* Problem 1-2 */
             start2 = System.currentTimeMillis();
-            // Answer2 = BellmanFord2(1);
+            BellmanFord2(1);
             time2 = (System.currentTimeMillis() - start2);
 
             // output1.txt로 답안을 출력합니다.
