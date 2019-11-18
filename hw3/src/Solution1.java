@@ -182,7 +182,7 @@ class Solution1 {
 				V[i] = Integer.parseInt(stk.nextToken());
 				W[i] = Integer.parseInt(stk.nextToken());
 			}
-			System.out.printf("TESTCASE[%d] N[%d] E[%d]\n",test_case,N,E);
+//			System.out.printf("TESTCASE[%d] N[%d] E[%d]\n",test_case,N,E);
             /* Problem 1-1 */
             start1 = System.currentTimeMillis();
             BellmanFord1(1);
