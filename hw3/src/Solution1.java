@@ -23,7 +23,7 @@ class Solution1 {
     static final int MAX_N = 1000;
 	static final int MAX_E = 100000;
 	static final int Div = 100000000;  // 1억
-	static final int Q_CAPACITY = 1<<10;
+	static final int Q_CAPACITY = 1024;
 	static int N, E;
 	static int[] U = new int[MAX_E], V = new int[MAX_E], W = new int[MAX_E];
 	static int[] Answer1 = new int[MAX_N+1];
@@ -32,7 +32,7 @@ class Solution1 {
     static double time1, time2;
 	static Node[][] adjList = new Node[MAX_N+1][MAX_N];
 	static int[] index = new int[MAX_N+1];
-    static int[] q=new int[Q_CAPACITY];
+    static int[] queue=new int[Q_CAPACITY];
 	static class Queue{
     	int head, tail;
     	int capacity;
@@ -40,8 +40,8 @@ class Solution1 {
     	Queue(int capacity){
     		this.head=this.tail=0;
     		this.capacity=capacity;
-    		this.q=new int[capacity];
-		}
+			this.q=queue;
+    	}
 		boolean isEmpty(){
     		return head==tail;
 		}
@@ -135,7 +135,6 @@ class Solution1 {
 		Queue q=new Queue(Q_CAPACITY);
 		q.enqueue(start);
 		while(!q.isEmpty()){
-//			System.out.printf("head[%d] tail[%d]\n",q.head,q.tail);
 			int from = q.dequeue();
 			Node[] temp = adjList[from];
 			int size=index[from];
@@ -183,7 +182,7 @@ class Solution1 {
 				V[i] = Integer.parseInt(stk.nextToken());
 				W[i] = Integer.parseInt(stk.nextToken());
 			}
-//			System.out.printf("TESTCASE[%d] N[%d] E[%d]\n",test_case,N,E);
+			System.out.printf("TESTCASE[%d] N[%d] E[%d]\n",test_case,N,E);
             /* Problem 1-1 */
             start1 = System.currentTimeMillis();
             BellmanFord1(1);
