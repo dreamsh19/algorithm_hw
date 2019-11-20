@@ -21,11 +21,47 @@ import java.io.PrintWriter;
 class Solution3 {
 	static final int MAX_N = 200;
 	static final int MAX_E = 10000;
-
+	static final int MAX_W = 1000;
+	static final int INF = MAX_N*MAX_W;
 	static int N, E;
 	static int[] U = new int[MAX_E], V = new int[MAX_E], W = new int[MAX_E];
 	static int Answer;
+	static int[][] d= new int[MAX_N+1][MAX_N+1];
 
+
+	static void init(){
+		Answer=0;
+		for(int i=1;i<=N;i++){
+			for(int j=1;j<=N;j++){
+				d[i][j]=INF;
+			}
+		}
+		for(int e=0;e<E;e++){
+			d[U[e]][V[e]]=W[e];
+		}
+	}
+
+	static void getAnswer(){
+		for(int i=1;i<=N;i++){
+			for(int j=1;j<=N;j++){
+				if(i!=j){
+					Answer+=d[i][j];
+				}
+			}
+		}
+	}
+	static void FloydWarshall(){
+
+		init();
+
+		for(int k=1;k<=N;k++){
+			for(int i=1;i<=N;i++){
+				for(int j=1;j<=N;j++){
+					d[i][j]=Math.min(d[i][j],d[i][k]+d[k][j]);
+				}
+			}
+		}
+	}
 	public static void main(String[] args) throws Exception {
 		/*
 		   동일 폴더 내의 input3.txt 로부터 데이터를 읽어옵니다.
@@ -59,8 +95,8 @@ class Solution3 {
 			   문제의 답을 계산하여 그 값을 Answer에 저장하는 것을 가정하였습니다.
 			 */
 			/////////////////////////////////////////////////////////////////////////////////////////////
-			Answer = 0;
-
+			FloydWarshall();
+			getAnswer();
 
 			// output3.txt로 답안을 출력합니다.
 			pw.println("#" + test_case + " " + Answer);
