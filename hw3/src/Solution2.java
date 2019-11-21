@@ -33,21 +33,27 @@ class Solution2 {
 	static adjListNode[] heads = new adjListNode[MAX_N+1];
 	static heapNode[] heapArr = new heapNode[MAX_N+1];
 
+	// A prim() takes Θ(V)+O((V+E)logV) = O((V+E)logV) time
 	static void prim(){
 
+		// A initialize() takes Θ(V) time
 		initialize();
 		maxHeap maxHeap = new maxHeap(N);
 
 		maxHeap.update(START,0);
-		while(!maxHeap.isEmpty()){
+
+		// Loop1 + Loop2 totally iterates max(V,E) times
+		// Therefore, it takes total O((V+E)logV) time
+		while(!maxHeap.isEmpty()){ // loop1
 			heapNode maxNode = maxHeap.extractMax();
 			Answer+=maxNode.key;
 			inMST[maxNode.vertexID]=true;
 			adjListNode adjListNode=heads[maxNode.vertexID];
-			while(adjListNode!=null){
+			while(adjListNode!=null){ // loop2
 				int VID=adjListNode.vertexID;
 
 				if(!inMST[VID] && maxHeap.getHeapNodeWithID(VID).key < adjListNode.weight){
+					// Update takes O(logV) time
 					maxHeap.update(VID,adjListNode.weight);
 				}
 				adjListNode=adjListNode.next;
@@ -56,21 +62,33 @@ class Solution2 {
 
 
 	}
+
+	// A initialize() takes Θ(V) + Θ(V) = Θ(V) time
 	static void initialize(){
 		Answer=0;
+
+		// This loop takes Θ(V) time
 		for(int i=1;i<=N;i++){
 			inMST[i]=false;
 		}
+
+		// This loop takes Θ(V) time
 		for(int i=1;i<=N;i++){
 			heapArr[i]=new heapNode(i,MIN_WEIGHT);
 		}
 		return;
 	}
 
+
+	// A loadGraph() takes Θ(V)+Θ(E) = Θ(V+E) time
 	static void loadGraph(){
+
+		// This loop takes Θ(V) time
 		for(int i=1;i<=N;i++){
 			heads[i]=null;
 		}
+
+		// This loop takes Θ(E) time
 		for( int i=0;i<E;i++){
 			int weight = W[i];
 			adjListNode node_v=new adjListNode(V[i],weight);
@@ -81,6 +99,7 @@ class Solution2 {
 			heads[V[i]] = node_u;
 		}
 	}
+
 	static class maxHeap{
 		private heapNode[] heap;
 		int len;
@@ -231,6 +250,10 @@ class Solution2 {
 			   문제의 답을 계산하여 그 값을 Answer에 저장하는 것을 가정하였습니다.
 			 */
 			/////////////////////////////////////////////////////////////////////////////////////////////
+
+			// loadGraph() : Θ(V+E)
+			// prim() : O((V+E)logV)
+			// It total takes O((V+E)logV) time
 			loadGraph();
 			prim();
 
