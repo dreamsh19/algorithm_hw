@@ -25,44 +25,61 @@ class Solution2 {
 	static final int RIGHT =1;
 	static final int ROOT =1;
 	static final int START = 1;
-	static final int WEIGHT_MIN = -1;
+	static final int MIN_WEIGHT = -1;
 	static int N, E;
 	static int[] U = new int[MAX_E], V = new int[MAX_E], W = new int[MAX_E];
 	static int Answer;
-	static Vertex[] Vertices = new Vertex[MAX_N+1];
+	static boolean[] inMST = new boolean[MAX_N+1];
+	static adjListNode[] heads = new adjListNode[MAX_N+1];
+	static heapNode[] heapArr = new heapNode[MAX_N+1];
 
 	static void prim(){
-		Answer=0;
-		heapNode[] init = buildInitialHeap();
-		maxHeap maxHeap = new maxHeap(init);
+
+		initialize();
+		maxHeap maxHeap = new maxHeap(N);
 
 		maxHeap.update(START,0);
 		while(!maxHeap.isEmpty()){
 			heapNode maxNode = maxHeap.extractMax();
-//			System.out.printf("VID[%d]KEY[%d]\n",maxNode.vertexID,maxNode.key);
 			Answer+=maxNode.key;
-			Vertices[maxNode.vertexID].inMST=true;
-			adjListNode adjListNode=Vertices[maxNode.vertexID].head;
+			inMST[maxNode.vertexID]=true;
+			adjListNode adjListNode=heads[maxNode.vertexID];
 			while(adjListNode!=null){
 				int VID=adjListNode.vertexID;
-				Vertex v=Vertices[VID];
-				if(!v.inMST && maxHeap.heap[maxHeap.indexOf[VID]].key < adjListNode.weight){
+
+				if(!inMST[VID] && maxHeap.getHeapNodeWithID(VID).key < adjListNode.weight){
 					maxHeap.update(VID,adjListNode.weight);
 				}
 				adjListNode=adjListNode.next;
 			}
-//			maxHeap.printHeap();
-//			break;
 		}
 
 
 	}
-	static heapNode[] buildInitialHeap(){
-		heapNode[] init = new heapNode[N+1];
+	static void initialize(){
+		Answer=0;
 		for(int i=1;i<=N;i++){
-			init[i]=new heapNode(i,WEIGHT_MIN);
+			inMST[i]=false;
 		}
-		return init;
+		for(int i=1;i<=N;i++){
+			heapArr[i]=new heapNode(i,MIN_WEIGHT);
+		}
+		return;
+	}
+
+	static void loadGraph(){
+		for(int i=1;i<=N;i++){
+			heads[i]=null;
+		}
+		for( int i=0;i<E;i++){
+			int weight = W[i];
+			adjListNode node_v=new adjListNode(V[i],weight);
+			adjListNode node_u=new adjListNode(U[i],weight);
+			node_v.next = heads[U[i]];
+			heads[U[i]] = node_v;
+			node_u.next = heads[V[i]];
+			heads[V[i]] = node_u;
+		}
 	}
 	static class maxHeap{
 		private heapNode[] heap;
@@ -70,9 +87,9 @@ class Solution2 {
 		int[] indexOf;
 
 
-		maxHeap(heapNode[] init){
-			heap = init;
-			len = init.length-1;
+		maxHeap(int len){
+			this.heap = heapArr;
+			this.len =len;
 			indexOf = new int[len+1];
 			for(int i=1;i<=len;i++){
 				indexOf[heap[i].vertexID]=i;
@@ -110,7 +127,9 @@ class Solution2 {
 		boolean hasParent(int i){
 			return i>1;
 		}
-
+		heapNode getHeapNodeWithID(int id){
+			return heap[indexOf[id]];
+		}
 		void update(int id,int newKey){
 			int heapIdx= indexOf[id];
 			heapNode node = heap[heapIdx];
@@ -164,18 +183,7 @@ class Solution2 {
 			this.next=null;
 		}
 	}
-	static class Vertex{
-		adjListNode head;
-		boolean inMST;
 
-		Vertex(){
-			this(null);
-		}
-		Vertex(adjListNode head){
-			this.head=head;
-			inMST=false;
-		}
-	}
 	static class heapNode implements Comparable<heapNode>{
 
 		int vertexID;
@@ -217,40 +225,13 @@ class Solution2 {
 				V[i] = Integer.parseInt(stk.nextToken());
 				W[i] = Integer.parseInt(stk.nextToken());
 			}
-
-			for(int i=1;i<=N;i++){
-				Vertices[i]=new Vertex();
-			}
-
-			for( int i=0;i<E;i++){
-				Vertex u = Vertices[U[i]];
-				Vertex v = Vertices[V[i]];
-				int weight = W[i];
-
-				adjListNode node_v=new adjListNode(V[i],weight);
-				adjListNode node_u=new adjListNode(U[i],weight);
-
-				node_v.next = u.head;
-				u.head = node_v;
-				node_u.next = v.head;
-				v.head = node_u;
-			}
-
-//			for(int i=1;i<=N;i++){
-//				Vertex v = Vertices[i];
-//				System.out.printf("\nvertex[%d]",i);
-//				adjListNode head= v.head;
-//				while(head!=null){
-//					System.out.printf("[%d-%d]",head.vertexID,head.weight);
-//					head=head.next;
-//				}
-//			}
 			/////////////////////////////////////////////////////////////////////////////////////////////
 			/*
 			   이 부분에서 여러분의 알고리즘이 수행됩니다.
 			   문제의 답을 계산하여 그 값을 Answer에 저장하는 것을 가정하였습니다.
 			 */
 			/////////////////////////////////////////////////////////////////////////////////////////////
+			loadGraph();
 			prim();
 
 			// output2.txt로 답안을 출력합니다.
