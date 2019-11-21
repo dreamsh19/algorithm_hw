@@ -35,10 +35,16 @@ class Solution1 {
 	static Node[][] adjList = new Node[MAX_N+1][MAX_N];
 	static int[] index = new int[MAX_N+1];
     static int[] queue=new int[Q_CAPACITY];
+    static Queue temp = new Queue();
+	static boolean[] inQueue = new boolean[MAX_N+1];
 	static class Queue{
     	int head, tail;
     	int capacity;
     	int[] q;
+
+    	Queue(){
+    		this(Q_CAPACITY);
+		}
     	Queue(int capacity){
     		this.head=this.tail=0;
     		this.capacity=capacity;
@@ -57,7 +63,7 @@ class Solution1 {
 				}
     			return false;
 			}else{
-    			for(int i=head;i<Q_CAPACITY;i++){
+    			for(int i=head;i<capacity;i++){
     				if(q[i]==e){
     					return true;
 					}
@@ -75,6 +81,7 @@ class Solution1 {
 		void enqueue(int e){
 			q[tail]=e;
     		tail= (tail+1)%capacity;
+
     	}
     	int dequeue(){
     		int temp=q[head];
@@ -94,38 +101,43 @@ class Solution1 {
 		}
 
 	}
+
+	// A BellmanFord1 takes Θ(V)+Θ(EV)+Θ(V) = Θ(EV) time
 	static void BellmanFord1(int start){
+		// This loop takes Θ(V) time
 		for(int i=1;i<=N;i++){
 			Answer1[i]=INF;
 		}
 		Answer1[start]=0;
+
+		// This loop takes Θ(V*E) time
 		for(int i=1;i<N;i++){
 			for(int e=0;e<E;e++){
 
 				int from = U[e];
 				int to = V[e];
 				int weight = W[e];
-//				if(Answer1[from]!=Integer.MAX_VALUE){
-//					Answer1[to]=Math.min(Answer1[to],Answer1[from]+weight);
-//				}
-//				if(Answer1[from]!=Integer.MAX_VALUE){
-					Answer1[to]=Math.min(Answer1[to],Answer1[from]+weight);
-//				}
+				Answer1[to]=Math.min(Answer1[to],Answer1[from]+weight);
 			}
 		}
+
+		// This loop takes Θ(V) time
 		for(int i=1;i<=N;i++){
 			Answer1[i]%=Div;
 		}
 	}
 
+	// A BellmanFord2 takes Θ(V)+Θ(E)+O(EV)= O(EV) time
 	static void BellmanFord2(int start){
-
+		// This loop takes Θ(V) time
 		for(int i=1;i<=N;i++){
 			Answer2[i]=INF;
 			index[i]=0;
+			inQueue[i]=false;
 		}
 		Answer2[start]=0;
 
+		// This loop takes Θ(E) time
 		for(int e=0;e<E;e++){
 			int from = U[e];
 			int to=V[e];
@@ -133,24 +145,32 @@ class Solution1 {
 			adjList[from][index[from]++]=new Node(to,weight);
 		}
 
+		Queue q=new Queue();
 
-		Queue q=new Queue(Q_CAPACITY);
 		q.enqueue(start);
-		while(!q.isEmpty()){
+		inQueue[start]=true;
+
+		// loop1 & loop2 totally iterates at most E*V time ( Same as BellmanFord1 )
+		// => O(EV)
+		while(!q.isEmpty()){ // loop1
 			int from = q.dequeue();
+			inQueue[from]=false;
 			Node[] temp = adjList[from];
 			int size=index[from];
-			for(int i=0;i<size;i++){
+			for(int i=0;i<size;i++){ // loop2
 				int to = temp[i].vertex;
 				int weight = temp[i].weight;
 				if(Answer2[from]+weight<Answer2[to]){
 					Answer2[to]=Answer2[from]+weight;
-					if(!q.contains(to)){
+					if(!inQueue[to]){
 						q.enqueue(to);
+						inQueue[to]=true;
 					}
 				}
 			}
 		}
+
+		// This loop takes Θ(V) time
 		for(int v=1;v<=N;v++){
 			Answer2[v]%=Div;
 		}
@@ -184,16 +204,17 @@ class Solution1 {
 				V[i] = Integer.parseInt(stk.nextToken());
 				W[i] = Integer.parseInt(stk.nextToken());
 			}
-//			System.out.printf("TESTCASE[%d] N[%d] E[%d]\n",test_case,N,E);
             /* Problem 1-1 */
+			// A BellmanFord1 takes Θ(EV) time
             start1 = System.currentTimeMillis();
-            BellmanFord1(1);
+			BellmanFord1(1);
             time1 = (System.currentTimeMillis() - start1);
 
             /* Problem 1-2 */
+			// A BellmanFord2 takes O(EV) time
             start2 = System.currentTimeMillis();
             BellmanFord2(1);
-            time2 = (System.currentTimeMillis() - start2);
+			time2 = (System.currentTimeMillis() - start2);
 
             // output1.txt로 답안을 출력합니다.
 			pw.println("#" + test_case);
