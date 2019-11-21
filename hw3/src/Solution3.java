@@ -29,18 +29,22 @@ class Solution3 {
 	static int[][] d= new int[MAX_N+1][MAX_N+1];
 
 
+	// A init() takes total Θ(E)+Θ(V^2)=Θ(V^2) time
 	static void init(){
 		Answer=0;
+		// It takes Θ(V^2) times
 		for(int i=1;i<=N;i++){
 			for(int j=1;j<=N;j++){
 				d[i][j]=INF;
 			}
 		}
+		// It takes Θ(E) times
 		for(int e=0;e<E;e++){
 			d[U[e]][V[e]]=W[e];
 		}
 	}
 
+	// A getAnswer() takes Θ(V^2) time
 	static void getAnswer(){
 		for(int i=1;i<=N;i++){
 			for(int j=1;j<=N;j++){
@@ -50,10 +54,14 @@ class Solution3 {
 			}
 		}
 	}
+
+	// A FloydWarshall() takes Θ(V^2)+Θ(V^3) = Θ(V^3) time
 	static void FloydWarshall(){
 
+		// It takes Θ(V^2) times
 		init();
 
+		// It takes Θ(V^3) time
 		for(int k=1;k<=N;k++){
 			for(int i=1;i<=N;i++){
 				for(int j=1;j<=N;j++){
@@ -95,6 +103,11 @@ class Solution3 {
 			   문제의 답을 계산하여 그 값을 Answer에 저장하는 것을 가정하였습니다.
 			 */
 			/////////////////////////////////////////////////////////////////////////////////////////////
+
+
+			// FloydWarshall() : Θ(V^3)
+			// getAnswer() : Θ(V^2)
+			// It takes total Θ(V^3) time
 			FloydWarshall();
 			getAnswer();
 

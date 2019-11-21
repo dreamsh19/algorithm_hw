@@ -24,6 +24,8 @@ class Solution1 {
 	static final int MAX_E = 100000;
 	static final int Div = 100000000;  // 1억
 	static final int Q_CAPACITY = 1024;
+	static final int MAX_W = 1000;
+	static final int INF = MAX_N * MAX_W ;
 	static int N, E;
 	static int[] U = new int[MAX_E], V = new int[MAX_E], W = new int[MAX_E];
 	static int[] Answer1 = new int[MAX_N+1];
@@ -94,7 +96,7 @@ class Solution1 {
 	}
 	static void BellmanFord1(int start){
 		for(int i=1;i<=N;i++){
-			Answer1[i]=Div;
+			Answer1[i]=INF;
 		}
 		Answer1[start]=0;
 		for(int i=1;i<N;i++){
@@ -119,7 +121,7 @@ class Solution1 {
 	static void BellmanFord2(int start){
 
 		for(int i=1;i<=N;i++){
-			Answer2[i]=Div;
+			Answer2[i]=INF;
 			index[i]=0;
 		}
 		Answer2[start]=0;
